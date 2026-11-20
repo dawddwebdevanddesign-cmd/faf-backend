@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timezone
+import certifi
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -13,7 +14,7 @@ CORS(app, origins=[
 ])
 
 MONGO_URI = os.environ.get("MONGO_URI")
-client = MongoClient(MONGO_URI) if MONGO_URI else None
+client = MongoClient(MONGO_URI, tlsCAFile=certifi.where(), serverSelectionTimeoutMS=10000) if MONGO_URI else None
 db = client["flash_away_fentanyl"] if client else None
 stories_collection = db["stories"] if db is not None else None
 
