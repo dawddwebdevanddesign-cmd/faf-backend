@@ -19,6 +19,11 @@ db = client["flash_away_fentanyl"] if client else None
 stories_collection = db["stories"] if db is not None else None
 
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    return jsonify({"error": str(e), "type": type(e).__name__}), 500
+
+
 @app.get("/health")
 def health_check():
     return jsonify({"status": "ok", "database_configured": stories_collection is not None}), 200
